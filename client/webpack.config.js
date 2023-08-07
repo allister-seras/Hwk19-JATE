@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const path = require('path');
+const webpack = require('webpack')
 const { InjectManifest } = require('workbox-webpack-plugin');
 
 module.exports = () => {
@@ -16,14 +17,18 @@ module.exports = () => {
     },
     //configuration for workbox plugins for a service worker and manifest file.
     plugins: [
-            new HtmlWebpackPlugin({
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+      }),
+
+      new HtmlWebpackPlugin({
         template: './index.html',
-        title: 'Contact Cards'
+        title: 'JATE',
       }),
 
       new InjectManifest({
         swSrc: './src-sw.js',
-        swDest: './src-sw.js'
+        swDest: './src-sw.js',
       }),
 
       new WebpackPwaManifest({
@@ -34,12 +39,11 @@ module.exports = () => {
         description: 'Take Notes with JavaScript syntax highlighting!',
         background_color: '#225caC',
         theme_color: '#225caC',
-        display: standalone,
-        start_url: './',
-        publicPath: './',
+        start_url: '/',
+        publicPath: '/',
         icons: [
           {
-          src: path.resolve('src/images/localStorage.png'),
+          src: path.resolve('src/images/logo.png'),
           sizes: [96, 128, 192, 256, 384, 512],
           destination: path.join('assets', 'icons'),
           },       
@@ -52,7 +56,7 @@ module.exports = () => {
     module: {
       rules: [
         {
-          test: /\.css$/i,
+          test: /\.css$/,
           use: ['style-loader', 'css-loader'],
         },
         {
